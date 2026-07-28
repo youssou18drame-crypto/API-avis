@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors') // 1. Ajoute cette ligne
-const route = require('./routes/index')
+const route = require('./BTS-SIO-General-main/api/routes/index')
 const app = express()
 
 // 2. Ajoute cette ligne juste après app = express()

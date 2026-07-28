@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 // Importation de tes contrôleurs
-const registerController = require('../controllers/post.controllers.register')
-const loginController = require('../controllers/post.controllers.login')
-const postController = require('../controllers/post.controllers') 
+const registerController = require('../../../controllers/post.controllers.register')
+const loginController = require('../../../controllers/post.controllers.login')
+const postController = require('../../../controllers/post.controllers') 
 
 // Routes d'authentification
 router.post('/register', registerController)
