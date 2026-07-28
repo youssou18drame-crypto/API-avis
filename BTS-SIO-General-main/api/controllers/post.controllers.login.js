@@ -1,4 +1,3 @@
-
 const argon2 = require('../lib/argon2');
 const prisma = require('../lib/prisma');
 const jwt = require('jsonwebtoken');
@@ -16,8 +15,8 @@ module.exports = async (req, res) => {
       });
     }
 
-    const isValid = await argon2.verifyPassword(password, user.password);
-    // adapte le nom/ordre des arguments à ta vraie fonction dans lib/argon2.js
+    // Utilisation de passwordHash au lieu de password (selon la structure de la base de données)
+    const isValid = await argon2.verifyPassword(password, user.passwordHash);
 
     if (!isValid) {
       return res.status(401).json({

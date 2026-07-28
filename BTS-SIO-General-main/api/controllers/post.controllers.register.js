@@ -3,25 +3,18 @@ const argon2 = require('../lib/argon2')
 const prisma = require('../lib/prisma')
 
 module.exports = async (req, res) => {
+  console.log("DONNÉES REÇUES DU FRONTEND :", req.body)
 
-  const { name, email, password, confirmPassword } = req.body
+  const { username, email, password } = req.body
 
-  if (!name || !email || !password || !confirmPassword) {
+  if (!username || !email || !password) {
     return res.status(400).json({
       error: true,
       message: 'Tous les champs sont obligatoires'
     })
   }
 
-  if (password !== confirmPassword) {
-    return res.status(400).json({
-      error: true,
-      message: 'Les mots de passe ne correspondent pas'
-    })
-  }
-
   try {
-
     const existingUser = await prisma.user.findUnique({
       where: {
         email
@@ -37,22 +30,13 @@ module.exports = async (req, res) => {
 
     const hash = await argon2.hashPassword(password)
 
+    // On enregistre uniquement les champs qui existent dans ton schema.prisma
     await prisma.user.create({
       data: {
-        name,
         email,
-        password: hash
+        passwordHash: hash
       }
     })
-
-    const subject = 'Bienvenue sur notre site !'
-
-    const text = `Bonjour ${name},
-
-Merci de vous être inscrit sur notre site.
-Votre compte a été créé avec succès.`
-
-    await sendEmail(email, subject, text)
 
     return res.status(201).json({
       error: false,
@@ -60,14 +44,11 @@ Votre compte a été créé avec succès.`
     })
 
   } catch (error) {
-
-    console.error(error)
+    console.error("ERREUR DÉTAILLÉE INSCRIPTION :", error)
 
     return res.status(500).json({
       error: true,
-      message: 'Erreur serveur'
+      message: error.message || 'Erreur serveur'
     })
-
   }
-
 }
