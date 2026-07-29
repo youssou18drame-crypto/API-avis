@@ -9,8 +9,6 @@ app.use('/', route)
 
 const prisma = require('./lib/prisma')
 
-// Si on est en local sur ton PC, on lance le serveur avec app.listen
-// Sur Vercel, cette condition est ignorée pour laisser Vercel gérer les requêtes
 if (process.env.NODE_ENV !== 'production') {
   const server = app.listen(4000, () => {
     console.log('Server is running on http://localhost:4000')
@@ -25,5 +23,5 @@ if (process.env.NODE_ENV !== 'production') {
   process.on('SIGTERM', shutdown)
 }
 
-// INDISPENSABLE pour Vercel : exporter l'application Express
+// C'est cette ligne qui manquait et qui permet à Vercel de faire fonctionner l'API
 module.exports = app
