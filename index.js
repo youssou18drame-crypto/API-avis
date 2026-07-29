@@ -3,7 +3,12 @@ const cors = require('cors')
 const route = require('./routes/index')
 const app = express()
 
-app.use(cors()) 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
 app.use(express.json())
 app.use('/', route)
 
@@ -23,5 +28,4 @@ if (process.env.NODE_ENV !== 'production') {
   process.on('SIGTERM', shutdown)
 }
 
-// C'est cette ligne qui manquait et qui permet à Vercel de faire fonctionner l'API
 module.exports = app
