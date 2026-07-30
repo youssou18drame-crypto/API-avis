@@ -1,18 +1,22 @@
 const express = require('express')
-const router = express.Router()
+const cors = require('cors')
 
-// Importation de tes contrôleurs
-const registerController = require('../controllers/post.controllers.register')
-const loginController = require('../controllers/post.controllers.login')
-const postController = require('../controllers/post.controllers') 
+const route = require('./routes/index')
 
-// Routes d'authentification
-router.post('/register', registerController)
-router.post('/login', loginController)
+const app = express()
 
-// Routes pour les avis
-router.get('/avis', postController.getAvis)
-router.post('/add/avis', postController.addAvis)
-router.delete('/avis/:id', postController.deleteAvis) // Route pour supprimer un avis
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With'
+  ]
+}))
 
-module.exports = router
+app.use(express.json())
+
+app.use('/', route)
+
+module.exports = app

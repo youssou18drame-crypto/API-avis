@@ -6,22 +6,26 @@ module.exports = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ 
+      where: { email } 
+    });
 
     if (!user) {
       return res.status(401).json({
         error: true,
-        message: "[M804] Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect"
       });
     }
 
-    // Utilisation de passwordHash au lieu de password (selon la structure de la base de données)
-    const isValid = await argon2.verifyPassword(password, user.passwordHash);
+    const isValid = await argon2.verifyPassword(
+      password,
+      user.passwordHash
+    );
 
     if (!isValid) {
       return res.status(401).json({
         error: true,
-        message: "[M804] Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect"
       });
     }
 
@@ -34,7 +38,11 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       error: false,
       token,
-      user: { id: user.id, name: user.name, email: user.email }
+      user: {
+        id: user.id,
+        name: user.username,
+        email: user.email
+      }
     });
 
   } catch (error) {
@@ -42,7 +50,7 @@ module.exports = async (req, res) => {
 
     return res.status(500).json({
       error: true,
-      message: "[M805] Erreur lors de la connexion"
+      message: "Erreur lors de la connexion"
     });
   }
 };
